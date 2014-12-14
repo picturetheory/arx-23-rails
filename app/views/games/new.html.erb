@@ -1,0 +1,10 @@
+<div class="booyah-box">
+	<h1>Game</h1>
+	<p>Your hand: 
+		<ul>
+		<% @hand.each do |card| %>
+			<li><%= card.output_card %></li>
+		<% end %>
+		</ul>
+	</p>
+</div>

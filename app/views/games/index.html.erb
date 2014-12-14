@@ -1,3 +1,19 @@
 <div class="booyah-box">
 	<h1>Welcome to my Blackjack on Rails app!</h1>
+	<p>Users Hall of Fame: 
+		<table>
+			<tr>
+				<th width="200">User</th>
+				<th width="200">Score</th>
+				<th width="200">Last Signed In</th>
+			</tr>			
+			<% @users.each do |u| %>
+				<tr>
+					<td><%= u.email %></td>
+					<td><%= u.get_player_score %></td>
+					<td><%= time_ago_in_words(u.current_sign_in_at) %> ago</td>
+				</tr>		
+			<% end %>
+		</table>
+	</p>
 </div>
