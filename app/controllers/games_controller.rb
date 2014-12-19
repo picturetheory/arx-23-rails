@@ -26,9 +26,10 @@ class GamesController < ApplicationController
 
 	# sets up a new game, sends message to waiting players to begin
 	def begin
-		game_id = params[:id]
-		response = FIREBASE.push("games/" + game_id.to_s + "/begin/", { :name => "true", :priority => 1 })
-		redirect_to play_path(game_id)
+		game = Game.find(params[:id])
+		game.update(status: "started")
+		response = FIREBASE.push("games/" + game.id.to_s + "/begin/", { :name => "true", :priority => 1 })
+		redirect_to play_path(game.id)
 	end
 
 	# main game logic 
