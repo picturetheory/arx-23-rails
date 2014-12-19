@@ -1,7 +1,13 @@
 BlackjackRails::Application.routes.draw do
   devise_for :users
   root 'games#index'
+  get 'games/join' => 'games#join'  
+  get 'games/wait/:id' => 'games#wait'
+  get 'games/begin/:id' => 'games#begin'
+  get 'games/play/:id' => 'games#play', :as => 'play'
   resources :games
+  
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

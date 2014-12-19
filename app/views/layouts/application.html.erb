@@ -4,6 +4,7 @@
   <title>BlackjackRails</title>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <script src="https://cdn.firebase.com/js/client/1.0.18/firebase.js"></script>
   <%= csrf_meta_tags %>
 </head>
 <body>
@@ -23,7 +24,8 @@
 
       <ul class="nav navbar-nav navbar-right">
       	<% if user_signed_in? %>      		
-      		<li><%= link_to 'Start Game', new_game_path %></li>
+      		<li><%= link_to 'Start New Game', new_game_path %></li>
+          <li><%= link_to 'Join A Game', games_join_path %></li>
       		<li><%= link_to 'Sign Out', destroy_user_session_path, :method => :delete %></li>
       	<% else %>
         	<li><%= link_to 'Sign In', new_user_session_path %></li>

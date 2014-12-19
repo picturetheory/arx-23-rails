@@ -1,0 +1,28 @@
+<div class="booyah-box">
+	<h1>Waiting For New Game To Start</h1>
+	<p>Waiting for game <%= @game.id.to_s %> to be initiated. The players joining the game are shown below. The game will automatically start when the initiating player is ready.
+		<ul>
+			<% @game.users.each do |u| %>
+				<li><%= u.email %></li>
+			<% end %>
+		</ul>
+	</p>
+
+</div>
+
+
+
+<script>
+$(function() {
+var myFirebaseRef = new Firebase("https://blinding-torch-3907.firebaseio.com/");
+
+	myFirebaseRef.child("games/<%= @game.id %>/players/").on("child_added", function(snapshot) {
+	  $('#players').append("<li>" + snapshot.val().name + "</li>");
+	});
+
+	myFirebaseRef.child("games/<%= @game.id %>/begin/").on("child_added", function(snapshot) {
+	  window.location.href = "<%= url_for :controller => 'games', :action => 'play', :id => @game.id %>";
+	});	
+
+});
+</script>

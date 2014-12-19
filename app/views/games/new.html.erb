@@ -1,10 +1,28 @@
 <div class="booyah-box">
-	<h1>Game</h1>
-	<p>Your hand: 
-		<ul>
-		<% @hand.each do |card| %>
-			<li><%= card.output_card %></li>
-		<% end %>
+	<h1>Create A New Game</h1>
+	<p>Waiting for players for game <%= @game.id.to_s %>:
+		<ul id="players">
+			<li>You (<%= current_user.email %>)</li>
 		</ul>
 	</p>
+	<p id="link_to_start">
+	</p>
 </div>
+
+
+
+<script>
+$(function() {
+var myFirebaseRef = new Firebase("https://blinding-torch-3907.firebaseio.com/");
+
+
+myFirebaseRef.child("games/<%= @game.id %>/players/").on("child_added", function(snapshot) {
+  $('#players').append("<li>" + snapshot.val().name + "</li>");
+  $('#link_to_start').append('<%= link_to 'Start the game', '/games/begin/' + @game.id.to_s %>');
+  //console.log(snapshot.val());
+});
+
+
+
+});
+</script>

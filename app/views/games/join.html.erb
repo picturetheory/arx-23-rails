@@ -1,0 +1,10 @@
+<div class="booyah-box">
+	<h1>Join A Game</h1>
+	<p>Select a game from the list below. If you don't see one, you can <%= link_to 'start your own', new_game_path %>.
+		<ul>
+			<% @games.each do |game| %>
+				<li><%= link_to game.id, '/games/wait/' + game.id.to_s %></li>
+			<% end %>
+		</ul>
+	</p>	
+</div>

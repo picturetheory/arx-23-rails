@@ -1,0 +1,11 @@
+<div class="booyah-box">
+	<h1>Game</h1>
+	<% @players.each do |player| %>
+	<p>Cards for player <%= player.email %>:
+		<ul id="player_<%= player.id %>">
+			<li>5 of Diamonds</li>
+		</ul>
+	</p>
+	<% end %>
+
+</div>

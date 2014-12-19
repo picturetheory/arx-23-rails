@@ -48,5 +48,16 @@ class Deck
 	def reshuffle
 		self.card_deck.shuffle!
 	end
+
+	def self.test_firebase(message)
+		# register my own account on firebase.com
+		
+		response = FIREBASE.push("games/1", { :name => message, :priority => 1 })
+		#puts response.success? # => true
+		#puts response.code # => 200
+		#puts response.body # => { 'name' => "-INOQPH-aV_psbk3ZXEX" }
+		#puts response.raw_body # => '{"name":"-INOQPH-aV_psbk3ZXEX"}'
+
+	end
 end
 

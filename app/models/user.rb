@@ -4,6 +4,9 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
+  has_many :players
+  has_many :games, through: :players
+
   def get_player_score
   	if self.games_won.nil?
   		return 0
