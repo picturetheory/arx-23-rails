@@ -1,4 +1,3 @@
-require_relative 'card'
 # ============================================================
 # Deck class
 # Represents a playing deck of cards, containing 40 cards
@@ -15,49 +14,50 @@ require_relative 'card'
 #   + reshuffle 	(reshuffle the deck)
 # ============================================================
 class Deck
-	attr_accessor :card_deck
+	attr_accessor :game_id
 
-	def initialize
-		@card_deck = []
+	def initialize(game_id)
+		@game_id = game_id
+		card_deck = []		
 		1.upto(10) do |card_number|
 			0.upto(3) do |suit_number|
-				@card_deck << Card.new(card_number, CARD_VALUES[suit_number])
+				card_deck << Card.new(card_number, CARD_VALUES[suit_number])
 			end
 		end
-		@card_deck.shuffle!
+		card_deck.shuffle!
+
+		REDIS.del deck_key
+		card_deck.each do |card|
+			REDIS.rpush deck_key, card.to_json
+		end
 	end
 
-	def deal_card
-		self.card_deck.shift
+	def deal_card		
+		Card.from_json(REDIS.lpop deck_key)
 	end
 
 	def output_deck
-		self.card_deck.collect do |card|
-			card.output_card
+		REDIS.lrange(deck_key, 0, -1).collect do |card|		
+			Card.from_json(card).output_card
 		end
 	end
 
 	def num_cards_in_deck
-		self.card_deck.count
+		REDIS.lrange(deck_key, 0, -1).count		
 	end
 
-	def add_cards_to_deck(cards)
-		cards.each {|card| self.card_deck << card}		
+	def add_cards_to_deck(cards)		
+		cards.each {|card| REDIS.rpush deck_key, card.to_json}
 	end
 
 	def reshuffle
-		self.card_deck.shuffle!
+		#self.card_deck.shuffle!
 	end
 
-	def self.test_firebase(message)
-		# register my own account on firebase.com
-		
-		response = FIREBASE.push("games/1", { :name => message, :priority => 1 })
-		#puts response.success? # => true
-		#puts response.code # => 200
-		#puts response.body # => { 'name' => "-INOQPH-aV_psbk3ZXEX" }
-		#puts response.raw_body # => '{"name":"-INOQPH-aV_psbk3ZXEX"}'
+	private 
 
-	end
+		def deck_key
+			return "game/" + self.game_id.to_s
+		end
 end
 

@@ -1,4 +1,3 @@
-require_relative 'constants'
 # ============================================================
 # Card class
 # Represents a single playing card (1-10 of hearts/clubs/
@@ -27,14 +26,34 @@ class Card
 	def output_card
 		self.card_number.to_s + " of " + self.card_suit.to_s
 	end
-
-	# STATIC METHOD
-	# could say def Card.random_card but this is error prone
+	
 	def self.random_card
-		#don't use @ here!
 		random_suit_number = rand(4)
 		Card.new(rand(10), CARD_VALUES[random_suit_number])
 	end
+
+	# serialise card object to json
+	def to_json
+		{'card_number' => @card_number, 'card_suit' => @card_suit}.to_json	
+	end
+
+	# deserialise card object from json
+	def self.from_json(string)
+		data = JSON.load(string)
+		if data['card_suit'] == "clubs"
+			card_suit = :clubs
+		elsif data['card_suit'] == "diamonds"
+			card_suit = :diamonds
+		elsif data['card_suit'] == "spades"
+			card_suit = :spades
+		elsif data['card_suit'] == "hearts"
+			card_suit = :hearts
+		else
+			return nil
+		end
+		self.new(data['card_number'], card_suit)
+	end
+
 
 	private
 
