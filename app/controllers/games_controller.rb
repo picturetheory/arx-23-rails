@@ -28,14 +28,28 @@ class GamesController < ApplicationController
 	def begin
 		game = Game.find(params[:id])
 		game.update(status: "started")
-		response = FIREBASE.push("games/" + game.id.to_s + "/begin/", { :name => "true", :priority => 1 })
+		response = FIREBASE.push("games/" + game.id.to_s + "/begin/", { :name => "true", :priority => 1 })		
+		
+		# set up the game
+		Deck.new(game.id)
+		players = game.players
+		players.each do |player|
+			player.create_hand
+		end
+
 		redirect_to play_path(game.id)
 	end
 
 	# main game logic 
-	def play
+	def play		
 		@game = Game.find(params[:id])
-		@players = @game.users
+		deck = Deck.fetch_deck(@game.id)		
+
+		@players = @game.players
+		@players.each do |player|
+			player.get_new_card(deck.deal_card)
+			player.get_new_card(deck.deal_card)
+		end
 	end
 
 end

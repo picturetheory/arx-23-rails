@@ -16,20 +16,29 @@
 class Deck
 	attr_accessor :game_id
 
-	def initialize(game_id)
+	def initialize(game_id, retrieve = 0)
 		@game_id = game_id
-		card_deck = []		
-		1.upto(10) do |card_number|
-			0.upto(3) do |suit_number|
-				card_deck << Card.new(card_number, CARD_VALUES[suit_number])
+
+		# if retrieve == 0, then rebuild the deck
+		# if retrieve == 1, stop here - the new Deck object will reference the existing Redis deck
+		if retrieve == 0
+			card_deck = []		
+			1.upto(10) do |card_number|
+				0.upto(3) do |suit_number|
+					card_deck << Card.new(card_number, CARD_VALUES[suit_number])
+				end
+			end
+			card_deck.shuffle!
+
+			REDIS.del deck_key
+			card_deck.each do |card|
+				REDIS.rpush deck_key, card.to_json
 			end
 		end
-		card_deck.shuffle!
+	end
 
-		REDIS.del deck_key
-		card_deck.each do |card|
-			REDIS.rpush deck_key, card.to_json
-		end
+	def self.fetch_deck(game_id)
+		return self.new(game_id, 1)
 	end
 
 	def deal_card		

@@ -9,7 +9,7 @@ FactoryGirl.define do
   end
   
   factory :game do
-    status "0"
+    status "started"
   end
 
   factory :player do
