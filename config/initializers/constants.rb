@@ -8,4 +8,4 @@ CARD_VALUES = [
 BASE_URI = 'https://blinding-torch-3907.firebaseio.com/'
 FIREBASE = Firebase::Client.new(BASE_URI)
 
-REDIS = Redis.new
+#REDIS = Redis.new
