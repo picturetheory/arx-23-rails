@@ -29,7 +29,7 @@ class Card
 	
 	def self.random_card
 		random_suit_number = rand(4)
-		Card.new(rand(10), CARD_VALUES[random_suit_number])
+		Card.new(rand(9)+1, CARD_VALUES[random_suit_number])
 	end
 
 	# serialise card object to json

@@ -55,3 +55,5 @@ gem 'devise', '>= 3.2.4'
 gem 'firebase'
 gem 'redis'
 gem 'json'
+
+gem "factory_girl_rails", "~> 4.0"
