@@ -4,17 +4,18 @@ class Player < ActiveRecord::Base
 
 
 	def add_initial_player_to_game
-		REDIS.rpush game_key + "/players/", self.user.id.to_s
+		REDIS.rpush game_key + "/players/", self.id.to_s
 	end
 
 	def add_player_to_game
-		REDIS.rpush game_key + "/players/", self.user.id.to_s
+		REDIS.rpush game_key + "/players/", self.id.to_s
 		response = FIREBASE.push("games/" + self.game.id.to_s + "/players/", { :name => self.user.email, :priority => 1 })
 	end
 
 	def create_hand
 		clear_hand
-		self.status = "play"
+		#self.status = "play"
+		self.update(status: "play")
 	end
 
 	def clear_hand

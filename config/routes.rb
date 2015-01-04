@@ -5,6 +5,8 @@ BlackjackRails::Application.routes.draw do
   get 'games/wait/:id' => 'games#wait'
   get 'games/begin/:id' => 'games#begin'
   get 'games/play/:id' => 'games#play', :as => 'play'
+  get 'games/turn/:id' => 'games#turn', :as => 'turn'
+  get 'games/finish/:id' => 'games#finish', :as => 'finish'
   resources :games
   
 

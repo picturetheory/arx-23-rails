@@ -1,12 +1,10 @@
 <div class="booyah-box">
-	<h1>Game</h1>
+	<h1>Game Ended</h1>
 	<% @players.each do |player| %>	
 		<p>Cards for 
 		
 		<% if @current_player == player.user.id && current_user.id == player.user.id %>
 			YOU:</b>
-		<% elsif @current_player == player.user.id %>
-			active player: <b><%= player.user.email %></b>:			
 		<% else %>
 			player <b><%= player.user.email %></b>:
 		<% end %>		
@@ -20,14 +18,26 @@
 			<% end %>
 			<li>TOTAL: <%= player.total_value_cards %></li>
 		</ul>
-
-		<% if @current_player == player.user.id && current_user.id == player.user.id %>
-			<% if player.status == "play" %>
-				<%= link_to 'Hit Me', '/games/turn/' + @game.id.to_s + '?turn=hit' %> | 
-				<%= link_to 'Hold', '/games/turn/' + @game.id.to_s + '?turn=hold' %>				
-			<% end %>
-		<% end %>
 		
 		</p>
 	<% end %>
 </div>
+
+<div class="booyah-box">
+	Time to next game is 
+	<div class="Timer">10</div> seconds.
+</div>
+
+<script>
+$(function() {
+	var counter = 10;
+	setInterval(function() {
+		counter = counter - 1;
+    	$('.Timer').text((counter));
+    	if (counter < 0) {
+    		window.location.href = "<%= url_for :controller => 'games', :action => 'play', :id => @game.id %>";
+    	}
+	}, 1000);
+});
+</script>
+

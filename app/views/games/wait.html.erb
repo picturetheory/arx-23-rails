@@ -14,7 +14,7 @@
 
 <script>
 $(function() {
-var myFirebaseRef = new Firebase("https://blinding-torch-3907.firebaseio.com/");
+	var myFirebaseRef = new Firebase("https://blinding-torch-3907.firebaseio.com/");
 
 	myFirebaseRef.child("games/<%= @game.id %>/players/").on("child_added", function(snapshot) {
 	  $('#players').append("<li>" + snapshot.val().name + "</li>");
@@ -23,6 +23,5 @@ var myFirebaseRef = new Firebase("https://blinding-torch-3907.firebaseio.com/");
 	myFirebaseRef.child("games/<%= @game.id %>/play/").on("child_added", function(snapshot) {
 	  window.location.href = "<%= url_for :controller => 'games', :action => 'play', :id => @game.id %>";
 	});	
-
 });
 </script>

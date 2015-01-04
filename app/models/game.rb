@@ -3,8 +3,8 @@ class Game < ActiveRecord::Base
 	has_many :users, through: :players
 
 
-	def set_current_player(user_id)
-		REDIS.set game_key + "/current_player", user_id
+	def set_current_player(player_id)
+		REDIS.set game_key + "/current_player", player_id
 	end
 
 	def move_to_next_player
@@ -12,24 +12,35 @@ class Game < ActiveRecord::Base
 		players << players[0]
 		current_player = REDIS.get game_key + "/current_player"
 		return_next_player = false
+		next_player = nil		
 
 		players.each do |player|
 			if return_next_player
-				set_current_player(player.id)
-				break
+				next_player = player
+				break		
 			end
 			if player == current_player
 				return_next_player = true
 			end
-		end			
+		end
+		set_current_player(next_player)
 	end
 
-	def get_current_player
-		return REDIS.get game_key + "/current_player"
+	def get_current_player_id
+		return REDIS.get(game_key + "/current_player").to_i
 	end
 
 	def get_all_players
 		return REDIS.lrange game_key + "/players/", 0, -1
+	end
+
+	def get_number_of_players
+		return REDIS.lrange(game_key + "/players/", 0, -1).count
+	end
+
+	def get_current_user_id
+		player = Player.find(REDIS.get(game_key + "/current_player").to_i)
+		return player.user.id
 	end
 
 	private 
