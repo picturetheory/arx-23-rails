@@ -6,9 +6,10 @@ class GamesController < ApplicationController
 		@users = User.all
 	end
 
-	# player can creata a new game
+	# player can create a new game
 	def new
-		@game = current_user.games.create(status: "new" )	
+		@game = current_user.games.create(status: "new" )
+		@game.players.first.add_initial_player_to_game
 	end
 
 	# players can view new, currently open (not-started) games to join
@@ -17,10 +18,10 @@ class GamesController < ApplicationController
 		@number_of_games = @games.count
 	end
 
-	# joining players wait for game to be started
+	# joining players must wait for game to be started
 	def wait
 		@game = Game.find(params[:id])
-		p = Player.create(:user_id => current_user.id, :game_id => @game.id)
+		p = Player.create(:user_id => current_user.id, :game_id => @game.id, :status => "init")
 		p.add_player_to_game		
 	end
 
@@ -28,28 +29,27 @@ class GamesController < ApplicationController
 	def begin
 		game = Game.find(params[:id])
 		game.update(status: "started")
-		response = FIREBASE.push("games/" + game.id.to_s + "/begin/", { :name => "true", :priority => 1 })		
+
+		response = FIREBASE.push("games/" + game.id.to_s + "/play/", { :name => "true", :priority => 1 })		
 		
-		# set up the game
-		Deck.new(game.id)
+		# set up the game, deal two cards to each player
+		deck = Deck.new(game.id)
 		players = game.players
 		players.each do |player|
 			player.create_hand
+			player.get_new_card(deck.deal_card)
+			player.get_new_card(deck.deal_card)			
 		end
+		game.set_current_player(players.first.user.id)
 
 		redirect_to play_path(game.id)
 	end
 
 	# main game logic 
 	def play		
-		@game = Game.find(params[:id])
-		deck = Deck.fetch_deck(@game.id)		
-
+		@game = Game.find(params[:id])				
+		@current_player = @game.get_current_player.to_i
 		@players = @game.players
-		@players.each do |player|
-			player.get_new_card(deck.deal_card)
-			player.get_new_card(deck.deal_card)
-		end
 	end
 
 end

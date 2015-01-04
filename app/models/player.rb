@@ -3,13 +3,18 @@ class Player < ActiveRecord::Base
 	belongs_to :game
 
 
+	def add_initial_player_to_game
+		REDIS.rpush game_key + "/players/", self.user.id.to_s
+	end
+
 	def add_player_to_game
+		REDIS.rpush game_key + "/players/", self.user.id.to_s
 		response = FIREBASE.push("games/" + self.game.id.to_s + "/players/", { :name => self.user.email, :priority => 1 })
 	end
 
 	def create_hand
 		clear_hand
-		self.status = 0		# 0 = playing, 1 = hold, 2 = bust
+		self.status = "play"
 	end
 
 	def clear_hand
@@ -41,5 +46,9 @@ class Player < ActiveRecord::Base
 		def player_key
 			return "game/" + self.game.id.to_s + "/player/" + self.user.id.to_s
 		end
+
+		def game_key
+			return "game/" + self.game.id.to_s
+		end			
 
 end

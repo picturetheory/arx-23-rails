@@ -20,7 +20,7 @@ var myFirebaseRef = new Firebase("https://blinding-torch-3907.firebaseio.com/");
 	  $('#players').append("<li>" + snapshot.val().name + "</li>");
 	});
 
-	myFirebaseRef.child("games/<%= @game.id %>/begin/").on("child_added", function(snapshot) {
+	myFirebaseRef.child("games/<%= @game.id %>/play/").on("child_added", function(snapshot) {
 	  window.location.href = "<%= url_for :controller => 'games', :action => 'play', :id => @game.id %>";
 	});	
 
