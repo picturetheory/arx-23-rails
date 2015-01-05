@@ -21,7 +21,7 @@ class GamesController < ApplicationController
 	# joining players must wait for game to be started
 	def wait
 		@game = Game.find(params[:id])
-		p = Player.create(:user_id => current_user.id, :game_id => @game.id, :status => "init")
+		p = Player.create(:user_id => current_user.id, :game_id => @game.id, :status => "init", :score => 0)
 		p.add_player_to_game		
 	end
 
@@ -29,13 +29,20 @@ class GamesController < ApplicationController
 	def begin
 		game = Game.find(params[:id])
 		init_game(game.id)		
-		response = FIREBASE.push("games/" + game.id.to_s + "/play/", { :name => "true", :priority => 1 })		
+		FIREBASE.push("games/" + game.id.to_s + "/play/", { :name => "true", :priority => 1 })
 		redirect_to play_path(game.id)
 	end
 
 	# main game view controller
 	def play		
-		@game = Game.find(params[:id])				
+		@game = Game.find(params[:id])
+		FIREBASE.delete("games/" + @game.id.to_s + "/turn/")
+		# if game has finished, then start a new one
+		if @game.status == "ended"
+			init_game(@game.id)
+			FIREBASE.delete("games/" + @game.id.to_s + "/ended/")
+		end
+		
 		@current_player = @game.get_current_user_id
 		@players = @game.players
 	end
@@ -45,7 +52,7 @@ class GamesController < ApplicationController
 		game = Game.find(params[:id])
 		deck = Deck.fetch_deck(game.id)
 		player = Player.find(game.get_current_player_id)
-		player_action = params[:turn]
+		player_action = params[:turn]		
 
 		if player_action == "hit" && player.status == "play"
 			player.get_new_card(deck.deal_card)
@@ -81,35 +88,39 @@ class GamesController < ApplicationController
 		end
 
 		if game.status == "ended"
+			# calculate the winners and update scores
+			players = game.players
+			result = []
+			players.each do |player|
+				if player.total_value_cards > 21
+					result << 100
+				else
+					result << 21 - player.total_value_cards
+				end
+			end
+			winning_score = result.min			
+			result.each_with_index do |r, index|
+				if r == winning_score
+					winner = players[index]
+					winner.update(status: "winner")
+					winner.update(score: players[index].score.to_i + 1)
+					winner_user = winner.user
+					winner_user.update(games_won: winner_user.games_won.to_i + 1)
+				end
+			end
+			FIREBASE.delete("games/" + game.id.to_s + "/turn/")
+			FIREBASE.push("games/" + game.id.to_s + "/ended/", { :name => "true", :priority => 1 })
 			redirect_to finish_path(game.id)
 		else
+			FIREBASE.push("games/" + game.id.to_s + "/turn/", { :name => "true", :priority => 1 })
 			redirect_to play_path(game.id)
 		end
 	end
 
 	# end of game view controller
 	def finish
-		@game = Game.find(params[:id])				
-		@current_player = @game.get_current_user_id		
-		@players = @game.players
-
-		result = []
-		@players.each do |player|
-			if player.total_value_cards > 21
-				result << 100
-			else
-				result << 21 - player.total_value_cards
-			end
-		end
-		winning_score = result.min
-		@winner = []
-		result.each_with_index do |r, index|
-			if r == winning_score
-				@players[index].status = "winner"
-				@players[index].score = @players[index].score.to_i + 1
-			end
-		end
-		# init_game(@game.id)
+		@game = Game.find(params[:id])	
+		@players = @game.players		
 	end
 
 	private

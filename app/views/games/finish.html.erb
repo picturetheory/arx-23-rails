@@ -1,5 +1,17 @@
 <div class="booyah-box">
 	<h1>Game Ended</h1>
+
+	<p>SCORES:<br/>
+	<% @players.each do |player| %>
+		<% if current_user.id == player.user.id %>
+			YOU:</b>	
+		<% else %>
+			player <b><%= player.user.email %></b>:
+		<% end %>
+		<%= player.score %><br/>
+	<% end %>
+	</p>
+
 	<% @players.each do |player| %>	
 		<p>Cards for 
 		

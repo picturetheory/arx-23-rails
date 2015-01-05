@@ -1,5 +1,17 @@
 <div class="booyah-box">
 	<h1>Game</h1>
+	
+	<p>SCORES:<br/>
+	<% @players.each do |player| %>
+		<% if current_user.id == player.user.id %>
+			YOU:</b>	
+		<% else %>
+			player <b><%= player.user.email %></b>:
+		<% end %>
+		<%= player.score %><br/>
+	<% end %>
+	</p>
+
 	<% @players.each do |player| %>	
 		<p>Cards for 
 		
@@ -9,7 +21,7 @@
 			active player: <b><%= player.user.email %></b>:			
 		<% else %>
 			player <b><%= player.user.email %></b>:
-		<% end %>		
+		<% end %>
 		
 		<br/>
 		STATUS: <%= player.status %>
@@ -31,3 +43,17 @@
 		</p>
 	<% end %>
 </div>
+
+<script>
+$(function() {
+	var myFirebaseRef = new Firebase("https://blinding-torch-3907.firebaseio.com/");
+
+	myFirebaseRef.child("games/<%= @game.id %>/turn/").on("child_added", function(snapshot) {
+	  window.location.href = "<%= url_for :controller => 'games', :action => 'play', :id => @game.id %>";
+	});
+
+	myFirebaseRef.child("games/<%= @game.id %>/ended/").on("child_added", function(snapshot) {
+	  window.location.href = "<%= url_for :controller => 'games', :action => 'finish', :id => @game.id %>";
+	});	
+});
+</script>
