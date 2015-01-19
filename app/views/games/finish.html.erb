@@ -48,7 +48,7 @@ $(function() {
 		    interval = setInterval(function() {
 			counter = counter - 1;
 	    	$('.Timer').text((counter));
-	    	if (counter < 0) {
+	    	if (counter < 1) {
 	    		clearInterval(interval);
 	    		window.location.href = "<%= url_for :controller => 'games', :action => 'play', :id => @game.id %>";
 	    	}

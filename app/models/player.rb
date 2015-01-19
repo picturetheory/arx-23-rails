@@ -41,8 +41,12 @@ class Player < ActiveRecord::Base
 		end
 	end
 
-  def is_cpu_player
-    return self.user.cpu_player
+  def is_cpu_player    
+    if self.user.cpu_player == true
+      return true
+    else
+      return false
+    end
   end
 
   def make_decision(player_action, deck)

@@ -54,6 +54,9 @@ class Card
 		self.new(data['card_number'], card_suit)
 	end
 
+  def self.get_card_image(card)
+    return "cards/" + (card.gsub! " ", "_") + ".png" 
+  end
 
 	private
 

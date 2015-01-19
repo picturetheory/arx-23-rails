@@ -30,31 +30,34 @@ class GamesController < ApplicationController
 		game = Game.find(params[:id])    
     
     cpu_player_included = params[:cpu]
-    if cpu_player_included
+    if cpu_player_included == 1
         cpu_user = User.where(cpu_player: true).first        
         p = Player.create(:user_id => cpu_user.id, :game_id => game.id, :status => "init", :score => 0)
         p.add_player_to_game
     end
 
 		init_game(game.id)
-		FIREBASE.push("games/" + game.id.to_s + "/play/", { :name => "true", :priority => 1 })
+		#FIREBASE.push("games/" + game.id.to_s + "/play/", { :name => "true", :priority => 1 })
+    game.firebase("push", "/play/")
 		redirect_to play_path(game.id)
 	end
 
 	# main game view controller
 	def play		
 		@game = Game.find(params[:id])
-		FIREBASE.delete("games/" + @game.id.to_s + "/turn/")
+		#FIREBASE.delete("games/" + @game.id.to_s + "/turn/")
+    @game.firebase("delete", "/turn/")
 		# if game has finished, then start a new one
 		if @game.status == "ended"
 			init_game(@game.id)
-			FIREBASE.delete("games/" + @game.id.to_s + "/ended/")
+			#FIREBASE.delete("games/" + @game.id.to_s + "/ended/")
+      @game.firebase("delete", "/ended/")
 		end
 		
 		@current_user_id = @game.get_current_user_id
 		@players = @game.players
 
-    #current_player = Player.find(@game.get_current_player_id)
+    #current_player = Player.find(@game.get_current_player_id)    
     #if current_player.is_cpu_player && current_player.status == "play"
     #  redirect_to action: "turn", id: @game.id
     #end
@@ -114,11 +117,14 @@ class GamesController < ApplicationController
 					winner_user.update(games_won: winner_user.games_won.to_i + 1)
 				end
 			end
-			FIREBASE.delete("games/" + game.id.to_s + "/turn/")
-			FIREBASE.push("games/" + game.id.to_s + "/ended/", { :name => "true", :priority => 1 })
+			#FIREBASE.delete("games/" + game.id.to_s + "/turn/")
+			#FIREBASE.push("games/" + game.id.to_s + "/ended/", { :name => "true", :priority => 1 })
+      game.firebase("delete", "/turn/")
+      game.firebase("push", "/ended/")
 			redirect_to finish_path(game.id)
 		else
-			FIREBASE.push("games/" + game.id.to_s + "/turn/", { :name => "true", :priority => 1 })
+			#FIREBASE.push("games/" + game.id.to_s + "/turn/", { :name => "true", :priority => 1 })
+      game.firebase("push", "/turn/")
 			redirect_to play_path(game.id)
 		end
 	end

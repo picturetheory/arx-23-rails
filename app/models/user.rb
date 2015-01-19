@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
 
   has_many :players
   has_many :games, through: :players
-  before_save :default_values
+  #before_save :default_values
 
   def get_player_score
   	if self.games_won.nil?
@@ -26,7 +26,7 @@ class User < ActiveRecord::Base
 
   private
 
-    def default_values
-        self.cpu_player ||= false
-    end    
+    #def default_values
+    #    self.cpu_player ||= false
+    #end    
 end
