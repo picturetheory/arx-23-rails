@@ -139,7 +139,8 @@ class GamesController < ApplicationController
 
 		def init_game(game_id)
 			game = Game.find(game_id)
-			
+			game.update(status: "started")
+
 			# set up the game, deal two cards to each player
 			deck = Deck.new(game.id)
 			players = game.players      
