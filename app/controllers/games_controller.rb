@@ -30,7 +30,7 @@ class GamesController < ApplicationController
 		game = Game.find(params[:id])    
     
     cpu_player_included = params[:cpu]
-    if cpu_player_included == 1
+    if cpu_player_included == "1"
         cpu_user = User.where(cpu_player: true).first        
         p = Player.create(:user_id => cpu_user.id, :game_id => game.id, :status => "init", :score => 0)
         p.add_player_to_game
