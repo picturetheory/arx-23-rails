@@ -2,7 +2,6 @@ class Player < ActiveRecord::Base
 	belongs_to :user
 	belongs_to :game
 
-
 	def add_initial_player_to_game
 		REDIS.rpush game_key + "/players/", self.id.to_s
 	end
@@ -42,6 +41,37 @@ class Player < ActiveRecord::Base
 		end
 	end
 
+  def is_cpu_player
+    return self.user.cpu_player
+  end
+
+  def make_decision(player_action, deck)
+    if is_cpu_player
+      player_action = cpu_make_decision
+    end
+
+    if player_action == "hit" && self.status == "play"
+      self.get_new_card(deck.deal_card)
+      if self.total_value_cards == 21
+        self.update(status: "hold")
+      elsif self.total_value_cards > 21
+        self.update(status: "bust")
+      end
+    elsif player_action == "hold"
+      self.update(status: "hold")
+    else
+      #
+    end
+  end
+
+  def cpu_make_decision 
+    if self.total_value_cards > 18
+      "hold"
+    else
+      "hit"
+    end   
+  end
+
 	private 
 
 		def player_key
@@ -50,6 +80,6 @@ class Player < ActiveRecord::Base
 
 		def game_key
 			return "game/" + self.game.id.to_s
-		end			
+		end
 
 end

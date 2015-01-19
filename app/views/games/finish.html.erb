@@ -43,13 +43,17 @@
 <script>
 $(function() {
 	var counter = 10;
-	setInterval(function() {
-		counter = counter - 1;
-    	$('.Timer').text((counter));
-    	if (counter < 0) {
-    		window.location.href = "<%= url_for :controller => 'games', :action => 'play', :id => @game.id %>";
-    	}
-	}, 1000);
+	var interval = null;
+	$(document).on('ready',function(){
+		    interval = setInterval(function() {
+			counter = counter - 1;
+	    	$('.Timer').text((counter));
+	    	if (counter < 0) {
+	    		clearInterval(interval);
+	    		window.location.href = "<%= url_for :controller => 'games', :action => 'play', :id => @game.id %>";
+	    	}
+		}, 1000);
+	});
 });
 </script>
 

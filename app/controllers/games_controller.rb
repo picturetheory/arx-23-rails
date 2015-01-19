@@ -27,8 +27,16 @@ class GamesController < ApplicationController
 
 	# sets up a new game, sends message to waiting players to begin
 	def begin
-		game = Game.find(params[:id])
-		init_game(game.id)		
+		game = Game.find(params[:id])    
+    
+    cpu_player_included = params[:cpu]
+    if cpu_player_included
+        cpu_user = User.where(cpu_player: true).first        
+        p = Player.create(:user_id => cpu_user.id, :game_id => game.id, :status => "init", :score => 0)
+        p.add_player_to_game
+    end
+
+		init_game(game.id)
 		FIREBASE.push("games/" + game.id.to_s + "/play/", { :name => "true", :priority => 1 })
 		redirect_to play_path(game.id)
 	end
@@ -43,8 +51,13 @@ class GamesController < ApplicationController
 			FIREBASE.delete("games/" + @game.id.to_s + "/ended/")
 		end
 		
-		@current_player = @game.get_current_user_id
+		@current_user_id = @game.get_current_user_id
 		@players = @game.players
+
+    #current_player = Player.find(@game.get_current_player_id)
+    #if current_player.is_cpu_player && current_player.status == "play"
+    #  redirect_to action: "turn", id: @game.id
+    #end
 	end
 
 	# logic for game turn
@@ -54,18 +67,7 @@ class GamesController < ApplicationController
 		player = Player.find(game.get_current_player_id)
 		player_action = params[:turn]		
 
-		if player_action == "hit" && player.status == "play"
-			player.get_new_card(deck.deal_card)
-			if player.total_value_cards == 21
-				player.update(status: "hold")
-			elsif player.total_value_cards > 21
-				player.update(status: "bust")
-			end
-		elsif player_action == "hold"
-			player.update(status: "hold")
-		else
-			#
-		end
+    player.make_decision(player_action, deck)
 
 		# look for next player who's still in the game
 		looking_for_next_player = true
@@ -74,12 +76,16 @@ class GamesController < ApplicationController
 
 		while looking_for_next_player
 			game.move_to_next_player
-			next_player = Player.find(game.get_current_player_id)
-			if next_player.status == "play"
+			new_player = Player.find(game.get_current_player_id)
+
+      if new_player.is_cpu_player && new_player.status == "play"
+        redirect_to action: "turn", id: game.id and return
+      elsif new_player.status == "play"
 				looking_for_next_player = false
 			else
 				count += 1
 			end
+
 			# if a full loop is done then end the game
 			if count > number_of_players
 				game.update(status: "ended")			
@@ -120,24 +126,29 @@ class GamesController < ApplicationController
 	# end of game view controller
 	def finish
 		@game = Game.find(params[:id])	
-		@players = @game.players		
+		@players = @game.players
 	end
 
 	private
 
 		def init_game(game_id)
 			game = Game.find(game_id)
-			game.update(status: "started")
-
+			
 			# set up the game, deal two cards to each player
 			deck = Deck.new(game.id)
-			players = game.players
+			players = game.players      
+      first_non_cpu_player_id = 0
+
 			players.each do |player|
 				player.create_hand
 				player.get_new_card(deck.deal_card)
-				player.get_new_card(deck.deal_card)			
+				player.get_new_card(deck.deal_card)
+        if !player.is_cpu_player && first_non_cpu_player_id == 0
+          first_non_cpu_player_id = player.id 
+        end
 			end
-			game.set_current_player(players.first.id)
+			#game.set_current_player(players.first.id)
+      game.set_current_player(first_non_cpu_player_id)
 		end
 
 end

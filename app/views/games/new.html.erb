@@ -5,7 +5,13 @@
 			<li>You (<%= current_user.email %>)</li>
 		</ul>
 	</p>
+	<p>
+		<form action="">
+		<input type="checkbox" id="isCPUSelected" checked>Enable CPU Player (always on for single player)<br>
+		</form>
+	</p>
 	<p id="link_to_start">
+		<%= link_to 'Start the game', '/games/begin/' + @game.id.to_s + '?cpu=1' %>
 	</p>
 </div>
 
@@ -16,10 +22,21 @@ $(function() {
 var myFirebaseRef = new Firebase("https://blinding-torch-3907.firebaseio.com/");
 
 
+$('#isCPUSelected').click(function () {
+	if ($("#isCPUSelected").is(':checked')) {
+		$("#link_to_start").empty();
+		$('#link_to_start').append('<%= link_to 'Start the game', '/games/begin/' + @game.id.to_s + '?cpu=1' %>');
+	}
+	else {
+		$("#link_to_start").empty();
+		$('#link_to_start').append('<%= link_to 'Start the game', '/games/begin/' + @game.id.to_s + '?cpu=0' %>');
+	}
+});
+
+
+
 myFirebaseRef.child("games/<%= @game.id %>/players/").on("child_added", function(snapshot) {
   $('#players').append("<li>" + snapshot.val().name + "</li>");
-  $('#link_to_start').append('<%= link_to 'Start the game', '/games/begin/' + @game.id.to_s %>');
-  //console.log(snapshot.val());
 });
 
 

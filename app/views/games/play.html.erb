@@ -15,9 +15,9 @@
 	<% @players.each do |player| %>	
 		<p>Cards for 
 		
-		<% if @current_player == player.user.id && current_user.id == player.user.id %>
+		<% if @current_user_id == player.user.id && current_user.id == player.user.id %>
 			YOU:</b>
-		<% elsif @current_player == player.user.id %>
+		<% elsif @current_user_id == player.user.id %>
 			active player: <b><%= player.user.email %></b>:			
 		<% else %>
 			player <b><%= player.user.email %></b>:
@@ -33,7 +33,7 @@
 			<li>TOTAL: <%= player.total_value_cards %></li>
 		</ul>
 
-		<% if @current_player == player.user.id && current_user.id == player.user.id %>
+		<% if @current_user_id == player.user.id && current_user.id == player.user.id %>
 			<% if player.status == "play" %>
 				<%= link_to 'Hit Me', '/games/turn/' + @game.id.to_s + '?turn=hit' %> | 
 				<%= link_to 'Hold', '/games/turn/' + @game.id.to_s + '?turn=hold' %>				
