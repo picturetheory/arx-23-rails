@@ -14,6 +14,12 @@ module ApplicationHelper
     end
   end
 
+  def winner_row_highlighting(player)
+    if player.status == "winner"
+      return "class=danger"
+    end
+  end
+
   def fb_prefix
     if Rails.env.production?
       prefix = "p/"
