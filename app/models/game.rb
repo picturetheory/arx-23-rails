@@ -43,15 +43,15 @@ class Game < ActiveRecord::Base
 		return player.user.id
 	end
 
-  def firebase(action, tag = "")
+  def firebase(action, tag = "", value = "true")
     if Rails.env.production?
       prefix = "p/"
     else
       prefix = "d/"
     end
-    
+
     if action == "push"
-      FIREBASE.push(prefix + "games/" + self.id.to_s + tag, { :name => "true", :priority => 1 })
+      FIREBASE.push(prefix + "games/" + self.id.to_s + tag, { :name => value, :priority => 1 })
     elsif action == "delete"
       FIREBASE.delete(prefix + "games/" + self.id.to_s + tag)
     end

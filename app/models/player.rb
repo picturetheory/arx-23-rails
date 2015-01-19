@@ -9,7 +9,7 @@ class Player < ActiveRecord::Base
 	def add_player_to_game
 		REDIS.rpush game_key + "/players/", self.id.to_s
 		#response = FIREBASE.push("games/" + self.game.id.to_s + "/players/", { :name => self.user.email, :priority => 1 })
-    response = self.game.firebase("push", "/players/")
+    response = self.game.firebase("push", "/players/", self.user.email)
 	end
 
 	def create_hand
