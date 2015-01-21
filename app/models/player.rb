@@ -31,9 +31,19 @@ class Player < ActiveRecord::Base
 	end
 
 	def total_value_cards
-		REDIS.lrange(player_key, 0, -1).inject(0) do |result, card| 
-			result + Card.from_json(card).card_number
+		number_of_aces = 0
+    total = REDIS.lrange(player_key, 0, -1).inject(0) do |result, card| 
+			current_card = Card.from_json(card).card_number      
+      number_of_aces += 1 if current_card == 11
+      result + current_card
 		end
+    
+    while number_of_aces > 0 && total > 21
+      total -= 10
+      number_of_aces -= 1
+    end
+    
+    total
 	end
 
 	def output_hand

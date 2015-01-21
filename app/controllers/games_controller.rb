@@ -112,7 +112,7 @@ class GamesController < ApplicationController
 			end
 			winning_score = result.min			
 			result.each_with_index do |r, index|
-				if r == winning_score
+				if r == winning_score && r < 21
 					winner = players[index]
 					winner.update(status: "winner")
 					winner.update(score: players[index].score.to_i + 1)

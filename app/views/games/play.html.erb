@@ -10,6 +10,9 @@
 					<%= image_tag Card.get_card_image(card), size: "100x146", alt: card %>
 				<% end %>
 			</p>
+			<p>
+				TOTAL: <%= player.total_value_cards %>
+			</p>			
 		<% end %>
 		
 		<div class="options">		
