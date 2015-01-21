@@ -24,7 +24,11 @@ class Card
 	end
 
   def card_number=(value)
-    @card_number = value
+    if value < 14 && value > 0
+      @card_number = value
+    else
+      raise "card " + value.to_s + " not recognised"
+    end
   end
 
   def card_number
@@ -33,7 +37,7 @@ class Card
     elsif @card_number > 0 && @card_number < 11
       return @card_number
     else
-      raise "card not recognised"
+      raise "card " + @card_number.to_s + " not recognised"
     end
   end
 
