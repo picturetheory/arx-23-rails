@@ -9,6 +9,7 @@ body {
 
 .content-box {
   text-align: center;
+  margin-top: 50px;
 }
 
 .cards-box {
@@ -47,6 +48,10 @@ body {
   color: red;
   font-size: 35px;
   display: inline-block;
+}
+
+.clear {
+  clear:both;
 }
 
 ul {
