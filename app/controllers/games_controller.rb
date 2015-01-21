@@ -14,7 +14,7 @@ class GamesController < ApplicationController
 
   def about
   end
-  
+
 	# players can view new, currently open (not-started) games to join
 	def join
 		@games = Game.where(status: "new")
@@ -60,10 +60,10 @@ class GamesController < ApplicationController
 		@current_user_id = @game.get_current_user_id
 		@players = @game.players
 
-    #current_player = Player.find(@game.get_current_player_id)    
-    #if current_player.is_cpu_player && current_player.status == "play"
-    #  redirect_to action: "turn", id: @game.id
-    #end
+    current_player = Player.find(@game.get_current_player_id)    
+    if current_player.is_cpu_player && current_player.status == "play"
+      redirect_to action: "turn", id: @game.id
+    end
 	end
 
 	# logic for game turn
