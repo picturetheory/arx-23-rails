@@ -15,9 +15,9 @@
 		<div class="options">		
 		<% if @current_user_id == player.user.id && current_user.id == player.user.id %>
 			<% player_active = true %>
-			<% if player.status == "play" %>							
+			<% if player.status == "play" %>				
 				<%= link_to 'Want to Hold?', '/games/turn/' + @game.id.to_s + '?turn=hold', class: "btn btn-danger"  %> <br/>
-				&nbsp;&nbsp;&nbsp; <div class="timer">10</div> &nbsp;&nbsp; <div class="warning">seconds to HIT!</div>			
+				&nbsp;&nbsp;&nbsp; <div class="timer">3</div> &nbsp;&nbsp; <div class="warning">seconds to HIT!</div>			
 			<% end %>	
 		<% end %>
 		</div>
@@ -64,7 +64,7 @@ $(function() {
 
 <% if player_active %>
 $(function() {
-	var counter = 10;
+	var counter = 3;
 	var interval = null;
 	$(document).on('ready',function(){
 		    interval = setInterval(function() {
