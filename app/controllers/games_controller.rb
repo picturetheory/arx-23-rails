@@ -78,6 +78,7 @@ class GamesController < ApplicationController
 		# look for next player who's still in the game
 		looking_for_next_player = true
 		number_of_players = game.get_number_of_players
+    number_of_busted_players = 0
 		count = 0
 
 		while looking_for_next_player
@@ -89,8 +90,17 @@ class GamesController < ApplicationController
       elsif new_player.status == "play"
 				looking_for_next_player = false
 			else
+        if new_player.status == "bust"
+          number_of_busted_players += 1
+        end
 				count += 1
 			end
+
+      # if everyone else is bust then end the game
+      if number_of_busted_players == number_of_players - 1
+        game.update(status: "ended")      
+        looking_for_next_player = false     
+      end
 
 			# if a full loop is done then end the game
 			if count > number_of_players
