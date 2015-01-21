@@ -1,28 +1,22 @@
-== README
+== speedJack (Blackjack for Rails)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a Ruby on Rails implementation of Blackjack which was developed as my solo project for [The Firehose Project](http://www.thefirehoseproject.com), an online bootcamp.
 
-Things you may want to cover:
+Thanks to [Ken Mazaika](http://github.com/kenmazaika), my bootcamp mentor, for giving me invaluable feedback and advice along the way.
 
-* Ruby version
+The live app can be found at https://blackjack-rehan-ali.herokuapp.com
 
-* System dependencies
+== App Features ==
 
-* Configuration
+speedJack features the following: 
 
-* Database creation
+* Single or multiplayer (with unlimited additional players)
+* Players have to react to their hand against the clock, by deciding whether or not to hold before their timer runs out and they automatically receive another card.
 
-* Database initialization
+== Code Features ==
 
-* How to run the test suite
+The code is written in Ruby on Rails, and also makes use of [Firebase](http://www.firebase.com) (for client-side update pushes, when another player makes a move) and [Redis](http://redis.io) (to store card decks for individual games). 
 
-* Services (job queues, cache servers, search engines, etc.)
+== Installing on another server ==
 
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+Coming soon...
