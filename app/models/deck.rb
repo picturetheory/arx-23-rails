@@ -23,7 +23,7 @@ class Deck
 		# if retrieve == 1, stop here - the new Deck object will reference the existing Redis deck
 		if retrieve == 0
 			card_deck = []		
-			1.upto(10) do |card_number|
+			1.upto(13) do |card_number|
 				0.upto(3) do |suit_number|
 					card_deck << Card.new(card_number, CARD_VALUES[suit_number])
 				end

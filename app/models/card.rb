@@ -16,20 +16,43 @@
 # ============================================================
 class Card
 
-	attr_accessor :card_number, :card_suit
+	attr_accessor :card_suit
 
 	def initialize(card_number, card_suit)
 		@card_number = check_card_number(card_number)
 		@card_suit   = check_card_suit(card_suit)
 	end
 
+  def card_number=(value)
+    @card_number = value
+  end
+
+  def card_number
+    if @card_number > 10 && @card_number < 14
+      return 10
+    elsif @card_number > 0 && @card_number < 11
+      return @card_number
+    else
+      raise "card not recognised"
+    end
+  end
+
 	def output_card
-		self.card_number.to_s + " of " + self.card_suit.to_s
+    if @card_number == 11
+      card_string = "jack"
+    elsif @card_number == 12
+      card_string = "queen"
+    elsif @card_number == 13
+      card_string = "king"
+    else
+      card_string = @card_number.to_s 
+    end
+		card_string + " of " + self.card_suit.to_s
 	end
 	
 	def self.random_card
 		random_suit_number = rand(4)
-		Card.new(rand(9)+1, CARD_VALUES[random_suit_number])
+		Card.new(rand(12)+1, CARD_VALUES[random_suit_number])
 	end
 
 	# serialise card object to json
@@ -62,8 +85,8 @@ class Card
 
 		def check_card_number(card_number)
 			if card_number.is_a? Integer
-				if card_number > 10
-					raise ArgumentError, "Card number is greater than 10"
+				if card_number > 13
+					raise ArgumentError, "Card number is greater than 13"
 				elsif card_number < 1
 					raise ArgumentError, "Card number is less than 1"
 				end
