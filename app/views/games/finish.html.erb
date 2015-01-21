@@ -5,12 +5,14 @@
 		<tr>
 			<td><b>Player</b></td>
 			<td><b>Status</b></td>
-			<td><b>Score</b></td>
+			<td><b>Final Score</b></td>
+			<td><b>Hands Won</b></td>
 		</tr>
 		<% @players.each do |player| %>
 			<tr <%= winner_row_highlighting(player) %> >
 				<td><%= get_player_label(@current_user_id, player) %></td>
 				<td><%= player.status %></td>
+				<td><%= player.total_value_cards %></td>
 				<td><%= player.score %></td>
 			</tr>
 		<% end %>
