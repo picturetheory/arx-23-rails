@@ -12,6 +12,9 @@ class GamesController < ApplicationController
 		@game.players.first.add_initial_player_to_game
 	end
 
+  def about
+  end
+  
 	# players can view new, currently open (not-started) games to join
 	def join
 		@games = Game.where(status: "new")

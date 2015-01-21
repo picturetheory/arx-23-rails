@@ -1,7 +1,7 @@
-<div class="booyah-box">
+<div class="col-xs-offset-1 col-xs-10 col-xs-offset-1 content-box">
 	<h1>Game Finished</h1>
 	<p>
-	<table class="table table-condensed">
+	<table class="table table-condensed summary">
 		<tr>
 			<td><b>Player</b></td>
 			<td><b>Status</b></td>
@@ -18,8 +18,13 @@
 	</p>
 </div>
 
+<div class="col-xs-offset-1 col-xs-10 col-xs-offset-1 content-box cards-box">
+	Time to next game is &nbsp;&nbsp;&nbsp;&nbsp;
+	<div class="timer">10</div> <div class="warning">seconds</a>.
+</div>
 
-<div class="booyah-box">
+
+<div class="col-xs-offset-1 col-xs-10 col-xs-offset-1 content-box">
 
 	<% @players.each do |player| %>			
 		<% if current_user.id == player.user.id %>
@@ -51,10 +56,6 @@
 	<% end %>	
 </div>
 
-<div class="booyah-box">
-	Time to next game is 
-	<div class="Timer">10</div> seconds.
-</div>
 
 <script>
 $(function() {
@@ -63,7 +64,7 @@ $(function() {
 	$(document).on('ready',function(){
 		    interval = setInterval(function() {
 			counter = counter - 1;
-	    	$('.Timer').text((counter));
+	    	$('.timer').text((counter));
 	    	if (counter < 1) {
 	    		clearInterval(interval);
 	    		window.location.href = "<%= url_for :controller => 'games', :action => 'play', :id => @game.id %>";

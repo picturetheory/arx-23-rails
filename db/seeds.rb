@@ -5,3 +5,8 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+u = User.where(:email => "cpu@blackjack.com")
+
+if u.blank?
+  User.create(:email => "cpu@blackjack.com", :password => "omgboooo", :password_confirmation => "omgboooo", :cpu_player => true, :games_won => 0)
+end

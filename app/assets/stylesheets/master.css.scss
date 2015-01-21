@@ -1,19 +1,64 @@
 body {
-  background: url('/assets/pattern.png');
-  font-family: Constantia, "Lucida Bright", Lucidabright, "Lucida Serif", Lucida, "DejaVu Serif", "Bitstream Vera Serif", "Liberation Serif", Georgia, serif;
+  font-family: "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif;  
 }
 
-.navbar.navbar-inverse {
-	border-radius: 0;
+.header {
+  text-align: center;
+  margin-bottom: 10px;
 }
 
-.booyah-box {
-  -moz-box-shadow: 1px 1px 2px 0 #d0d0d0;
-  -webkit-box-shadow: 1px 1px 2px 0 #d0d0d0;
-  box-shadow: 1px 1px 2px 0 #d0d0d0;
-  background: #fff;
-  border: 1px solid #ccc;
-  border-color: #e4e4e4 #bebebd #bebebd #e4e4e4;
-  margin:10px;
-  padding:20px;
+.content-box {
+  text-align: center;
+}
+
+.cards-box {
+  margin-top: 20px;
+  margin-bottom: 50px;
+}
+
+.tagline {
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.summary {
+  width: 60%;
+}
+
+.options {
+  display: inline-block;
+}
+
+.btn {
+  font-weight: bold;
+  font-size: 30px;
+  display: inline-block;
+}
+
+.timer {
+  font-weight: bold;
+  color: red;
+  font-size: 35px;
+  display: inline-block;
+}
+
+.warning {
+  font-weight: bold;
+  color: red;
+  font-size: 35px;
+  display: inline-block;
+}
+
+ul {
+  text-align: center;
+}
+table {
+  text-align: center;
+  margin-left:auto; 
+  margin-right:auto; 
+}
+
+th {
+  width: 200px;
+  text-align: center;
 }

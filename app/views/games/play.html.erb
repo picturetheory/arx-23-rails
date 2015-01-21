@@ -1,7 +1,38 @@
-<div class="booyah-box">
-	<h1>Current Game</h1>
+<div class="col-xs-offset-1 col-xs-10 col-xs-offset-1 content-box cards-box">
+
+	<% player_active = false %>
+	<% @players.each do |player| %>			
+
+		<% if current_user.id == player.user.id %>
+			<p class="tagline">Your cards:</p>
+			<p>
+				<% player.output_hand.each do |card| %>					
+					<%= image_tag Card.get_card_image(card), size: "100x146", alt: card %>
+				<% end %>
+			</p>
+		<% end %>
+		
+		<div class="options">		
+		<% if @current_user_id == player.user.id && current_user.id == player.user.id %>
+			<% player_active = true %>
+			<% if player.status == "play" %>							
+				<%= link_to 'Want to Hold?', '/games/turn/' + @game.id.to_s + '?turn=hold', class: "btn btn-danger"  %> <br/>
+				&nbsp;&nbsp;&nbsp; <div class="timer">10</div> &nbsp;&nbsp; <div class="warning">seconds to HIT!</div>			
+			<% end %>	
+		<% end %>
+		</div>
+		
+	<% end %>
+
+	<% unless player_active %>
+		<b>Waiting for other players to make their turns...</b>
+	<% end %>
+
+</div>
+
+<div class="col-xs-offset-1 col-xs-10 col-xs-offset-1 content-box">
 	<p>
-	<table class="table table-condensed">
+	<table class="table table-condensed summary">
 		<tr>
 			<td><b>Player</b></td>
 			<td><b>Status</b></td>
@@ -18,34 +49,6 @@
 	</p>
 </div>
 
-<div class="booyah-box">
-
-	<% @players.each do |player| %>			
-
-		<% if current_user.id == player.user.id %>
-			<p>Your cards: <br/> 			
-				<% player.output_hand.each do |card| %>					
-					<%= image_tag Card.get_card_image(card), size: "100x146", alt: card %>
-				<% end %>
-			</p>
-			<p>
-				TOTAL: <%= player.total_value_cards %>
-			</p>
-		<% end %>
-		
-		<br/>		
-		
-		<% if @current_user_id == player.user.id && current_user.id == player.user.id %>
-			<% if player.status == "play" %>
-				<%= link_to 'Hit Me', '/games/turn/' + @game.id.to_s + '?turn=hit' %> | 
-				<%= link_to 'Hold', '/games/turn/' + @game.id.to_s + '?turn=hold' %>				
-			<% end %>
-		<% end %>
-		
-		</p>
-	<% end %>
-</div>
-
 <script>
 $(function() {
 	var myFirebaseRef = new Firebase("https://blinding-torch-3907.firebaseio.com/");
@@ -58,4 +61,22 @@ $(function() {
 	  window.location.href = "<%= url_for :controller => 'games', :action => 'finish', :id => @game.id %>";
 	});	
 });
+
+<% if player_active %>
+$(function() {
+	var counter = 10;
+	var interval = null;
+	$(document).on('ready',function(){
+		    interval = setInterval(function() {
+			counter = counter - 1;
+	    	$('.timer').text((counter));
+	    	if (counter < 1) {
+	    		clearInterval(interval);
+	    		window.location.href = "<%= url_for :controller => 'games', :action => 'turn', :id => @game.id, :turn => 'hit' %>";
+	    	}
+		}, 1000);
+	});
+});
+<% end %>
+
 </script>
