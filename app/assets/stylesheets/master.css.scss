@@ -9,11 +9,15 @@ body {
 
 .content-box {
   text-align: center;
-  margin-top: 50px;
 }
 
 .cards-box {
-  margin-top: 20px;
+  //margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.timer-box {
+  //margin-top: 20px;
   margin-bottom: 50px;
 }
 
@@ -66,4 +70,10 @@ table {
 th {
   width: 200px;
   text-align: center;
+}
+
+@media (max-width: 500px) {
+  .header-img {    
+    width: 80%;    
+  }
 }

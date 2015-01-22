@@ -17,7 +17,12 @@ class GamesController < ApplicationController
 
 	# players can view new, currently open (not-started) games to join
 	def join
-		@games = Game.where(status: "new")
+		#@games = Game.where(status: "new", created_at: )
+    time_period_for_games = Time.now - 1.hours
+    #raise time_period_for_games.to_s
+    #raise Game.last.created_at.to_s 
+    @games = Game.where("status = 'new' and created_at >= ?", time_period_for_games)
+      
 		@number_of_games = @games.count
 	end
 

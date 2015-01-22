@@ -1,10 +1,19 @@
 <div class="col-xs-offset-1 col-xs-10 col-xs-offset-1 content-box">
 	<h1>Join A Game</h1>
 	<p>Select a game from the list below. If you don't see one, you can <%= link_to 'start your own', new_game_path %>.
-		<ul>
+		<table class="table table-condensed table-striped summary" id="players">
+			<tr>
+				<th>Game Number</th>
+				<th>Initiated By</th>
+				<th>Started Time</th>
+			</tr>
 			<% @games.each do |game| %>
-				<li><%= link_to game.id, '/games/wait/' + game.id.to_s %></li>
+				<tr>
+					<td><%= link_to 'Join Game ' + game.id.to_s, '/games/wait/' + game.id.to_s %></td>
+					<td><%= get_initiating_user(game).email %></td>
+					<td><%= time_ago_in_words(game.created_at) %></td>
+				</tr>
 			<% end %>
-		</ul>
+		</table>
 	</p>	
 </div>

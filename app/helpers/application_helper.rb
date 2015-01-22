@@ -27,4 +27,9 @@ module ApplicationHelper
       prefix = "d/"
     end
   end
+
+  def get_initiating_user(game)
+    player = game.players.first
+    return player.user 
+  end
 end
