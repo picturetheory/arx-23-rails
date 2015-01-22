@@ -33,7 +33,7 @@
 		<% if current_user.id == player.user.id %>
 			<p>Your cards: <br/> 			
 				<% player.output_hand.each do |card| %>					
-					<%= image_tag Card.get_card_image(card), size: "100x146", alt: card %>
+					<%= image_tag Card.get_card_image(card), size: "100x146", alt: card, class: "card" %>
 				<% end %>
 			</p>
 			<p>
@@ -48,7 +48,7 @@
 		<% if current_user.id != player.user.id %>
 			<p>Cards for <b><%= player.user.email %></b>: <br/>
 				<% player.output_hand.each do |card| %>					
-					<%= image_tag Card.get_card_image(card), size: "100x146", alt: card %>
+					<%= image_tag Card.get_card_image(card), size: "100x146", alt: card, class: "card" %>
 				<% end %>
 			</p>
 			<p>
