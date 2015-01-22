@@ -1,9 +1,9 @@
 <div class="col-xs-offset-1 col-xs-10 col-xs-offset-1 content-box">
 	<h1>Waiting For New Game To Start</h1>
-	<p>Waiting for game <%= @game.id.to_s %> to be initiated. The players joining the game are shown below. The game will automatically start when the initiating player is ready.
+	<p>Waiting for game <%= @game.id.to_s %> to be initiated. The players joining the game are shown below. The game will automatically start when the initiating player is ready. All games feature a computer opponent.
 		<table class="table table-condensed table-striped summary" id="players">
 			<tr>
-				<th>Player</th>				
+				<th>Human Player</th>				
 			</tr>			
 			<tr>
 				<td><%= get_initiating_user(@game).email %></td>
