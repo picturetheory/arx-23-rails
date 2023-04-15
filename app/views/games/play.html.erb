@@ -1,21 +1,21 @@
 <div class="col-xs-offset-1 col-xs-10 col-xs-offset-1 content-box cards-box">
 
-	<% player_active = false %>
-	<% @players.each do |player| %>			
+	<% player_active = false %>		# Resets player_active to false
+	<% @players.each do |player| %>		# For each item in @players, do this code with that item as |player|	
 
 		<% if current_user.id == player.user.id %>
 			<p class="tagline">Your cards:</p>
 			<p>
-				<% player.output_hand.each do |card| %>					
+				<% player.output_hand.each do |card| %>		# For each item in player.output_hand, do this code with that item as |card|	
 					<%= image_tag Card.get_card_image(card), size: "100x146", alt: card, class: "card" %>
 				<% end %>
 			</p>		
 		<% end %>
 		
 		<div class="options">		
-		<% if @current_user_id == player.user.id && current_user.id == player.user.id %>
-			<% player_active = true %>
-			<% if player.status == "play" %>				
+		<% if @current_user_id == player.user.id && current_user.id == player.user.id %>	# If current_user_id (instance) == player.user.id and current_user.id (local) == player.user.id
+			<% player_active = true %>	# Sets this player as the active player
+			<% if player.status == "play" %>	# Where is player.status set?			
 				<%= link_to 'Want to Hold?', '/games/turn/' + @game.id.to_s + '?turn=hold', class: "btn btn-danger"  %> <br/>
 				&nbsp;&nbsp;&nbsp; <div class="timer">3</div> &nbsp;&nbsp; <div class="warning">seconds to HIT!</div>			
 			<% end %>	
@@ -38,7 +38,7 @@
 			<td><b>Status</b></td>
 			<td><b>Score</b></td>
 		</tr>
-		<% @players.each do |player| %>
+		<% @players.each do |player| %>	# For each item in @players, do this code with that item as |player|	
 			<tr <%= player_row_highlighting(@current_user_id, player) %> >
 				<td><%= get_player_label(@current_user_id, player) %></td>
 				<td><%= player.status %></td>
@@ -62,7 +62,7 @@ $(function() {
 	});	
 });
 
-<% if player_active %>
+<% if player_active %>	# Runs the timer for an active player until they have to hit
 $(function() {
 	var counter = 3;
 	var interval = null;
