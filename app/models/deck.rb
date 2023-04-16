@@ -46,7 +46,7 @@ class Deck
 	end
 
 	def output_deck
-		REDIS.lrange(deck_key, 0, -1).collect do |card|		
+		REDIS.lrange(deck_key, 0, -1).collect do |card|		# -1 represents final element in array, so this returns list contents from index 0 to end
 			Card.from_json(card).output_card
 		end
 	end
