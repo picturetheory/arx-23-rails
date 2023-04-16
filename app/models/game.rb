@@ -9,7 +9,7 @@ class Game < ActiveRecord::Base
 
 	def move_to_next_player
 		players = REDIS.lrange game_key + "/players/", 0, -1
-		players << players[0]
+		players << players[0] ## Add value at index 0 of players to the end of the same array
 		current_player = REDIS.get game_key + "/current_player"
 		return_next_player = false
 		next_player = nil		
