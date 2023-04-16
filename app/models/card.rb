@@ -23,7 +23,7 @@ class Card
 		@card_suit   = check_card_suit(card_suit)
 	end
 
-  def card_number=(value)
+  def card_number=(value) # Where is value generated?
     if value < 14 && value > 0
       @card_number = value
     else
