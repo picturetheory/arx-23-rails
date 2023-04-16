@@ -42,7 +42,7 @@ class Deck
 	end
 
 	def deal_card		
-		Card.from_json(REDIS.lpop deck_key)
+		Card.from_json(REDIS.lpop deck_key) # lpop returns and removes the first element in a list to "deal the top card"
 	end
 
 	def output_deck
