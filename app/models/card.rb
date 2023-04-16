@@ -23,7 +23,7 @@ class Card
 		@card_suit   = check_card_suit(card_suit)
 	end
 
-  def card_number=(value) # Where is value generated?
+  def card_number=(value) # Value is generated when the deck is first initialised, in the lines starting with "1.upto(13)"
     if value < 14 && value > 0
       @card_number = value
     else
