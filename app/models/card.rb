@@ -32,11 +32,11 @@ class Card
   end
 
   def card_number
-    if @card_number > 10 && @card_number < 14
+    if @card_number > 10 && @card_number < 14 # If @card_number is 11, 12, or 13 (representing J, Q, K), return its value as 10
       return 10
-    elsif @card_number > 1 && @card_number < 11
+    elsif @card_number > 1 && @card_number < 11 # If @card_number is between 2 and 10 inclusive, return @card_number as its value
       return @card_number
-    elsif @card_number == 1
+    elsif @card_number == 1 # If @card_number is 1 (representing an ace), return its value as 11
       return 11
     else
       raise "card " + @card_number.to_s + " not recognised"
